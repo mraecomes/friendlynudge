@@ -1,0 +1,26 @@
+# Mac system files
+.DS_Store
+.DS_Store?
+._*
+
+# Environment variables — never commit these
+.env.local
+.env*.local
+
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Vercel
+.vercel
+
+# Debug logs
+npm-debug.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
