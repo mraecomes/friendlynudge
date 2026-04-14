@@ -443,3 +443,29 @@ Commit types:
 - [ ] Does the commit message follow the format above?
 - [ ] Is this change on a feature branch, not main?
 
+
+---
+
+## Context7 — Live Documentation
+
+Context7 MCP is installed and provides real-time, version-specific documentation for all libraries used in this project. Always use Context7 when generating code involving any of the following to ensure documentation is current and not based on outdated training data:
+
+- Next.js
+- Supabase
+- TanStack Query
+- Tailwind CSS
+- Frappe Gantt
+- TypeScript
+- Resend
+- node-cron
+
+### How to Use Context7
+
+Add `use context7` to any prompt where you need current library documentation. Example:
+
+```
+Create a Next.js middleware that checks for a valid Supabase session in cookies. use context7
+```
+
+Context7 will automatically fetch the latest official documentation before generating code. This prevents deprecated patterns and hallucinated APIs.
+
