@@ -26,9 +26,29 @@
 
 ---
 
+## [April 17 2026] — Issue #1 Complete
+
+### Added
+
+- Next.js 16 + TypeScript + Tailwind CSS v4 project scaffolded
+- Supabase browser, server, and middleware clients configured
+- TanStack Query v5 provider set up
+- Lucide React icons installed
+- Inter font applied via next/font/google
+- Design system color palette defined in globals.css
+- TypeScript types for Timeline, Task, Dependency, TaskStatus
+- Route protection middleware
+- .env.local stubbed with required keys
+
+### Decisions Made
+
+- Used create-next-app into temp folder due to existing planning files
+- Added middleware guard for missing Supabase env vars during setup
+
 ## [April 2026] — Planning Phase Complete
 
 ### Added
+
 - `PRD.md` — Full product requirements document covering MVP through v3
 - `CLAUDE.md` — Claude Code instruction file with tech stack, schema, UX rules, and design direction
 - `ARCHITECTURE.md` — Technical architecture document covering data flow, security model, and key decisions
@@ -37,6 +57,7 @@
 - `.env.example` — Environment variable template
 
 ### Decisions Made
+
 - Tech stack finalized: Next.js + TypeScript, Tailwind CSS, TanStack Query, Supabase, Resend, node-cron, Frappe Gantt, Vercel
 - MVP scope locked: authentication, single timeline, task CRUD, Finish-to-Start dependencies, Gantt visualization
 - Design direction: clean and corporate, navy and blue color palette, inspired by Linear/Notion/Asana
@@ -46,4 +67,3 @@
 
 ---
 
-<!-- Add new entries above this line -->
