@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { TimelineHeader } from '@/components/timelines/TimelineHeader'
-import { TimelineEmptyState } from '@/components/timelines/TimelineEmptyState'
+import { TimelinePageBody } from '@/components/timelines/TimelinePageBody'
 import { TimelineNotFound } from '@/components/timelines/TimelineNotFound'
 
 type PageProps = { params: Promise<{ id: string }> }
@@ -29,7 +29,7 @@ export default async function TimelinePage({ params }: PageProps) {
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
       <TimelineHeader timelineId={id} />
       <main className="flex-1 flex flex-col">
-        <TimelineEmptyState />
+        <TimelinePageBody timelineId={id} />
       </main>
     </div>
   )

@@ -20,6 +20,11 @@ export function CreateTimelineModal({ onClose }: CreateTimelineModalProps) {
   const [endDate, setEndDate] = useState('')
   const [error, setError] = useState('')
 
+  const dateError =
+    startDate && endDate && endDate < startDate
+      ? 'End date must be after start date.'
+      : ''
+
   useEffect(() => {
     nameRef.current?.focus()
   }, [])
@@ -32,6 +37,8 @@ export function CreateTimelineModal({ onClose }: CreateTimelineModalProps) {
       setError('Please enter a timeline name.')
       return
     }
+
+    if (dateError) return
 
     try {
       const timeline = await mutateAsync({
@@ -93,12 +100,15 @@ export function CreateTimelineModal({ onClose }: CreateTimelineModalProps) {
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
+          {dateError && (
+            <p className="text-xs text-[#DC2626] -mt-1">{dateError}</p>
+          )}
 
           <div className="flex gap-3 pt-1">
             <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" variant="primary" isLoading={isPending} className="flex-1">
+            <Button type="submit" variant="primary" isLoading={isPending} disabled={!!dateError} className="flex-1">
               Create Timeline
             </Button>
           </div>
