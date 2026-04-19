@@ -26,6 +26,42 @@
 
 ---
 
+## [April 18 2026] — Issues #2 and #3 Complete
+
+### Issue #2 — Database Schema
+
+Created the Supabase database schema for the MVP via a single migration file (`supabase/migrations/20260418000000_create_mvp_tables.sql`).
+
+### Added
+
+- `timelines` table — stores project timelines, linked to the authenticated user
+- `tasks` table — stores individual tasks with dates, duration, status, and position
+- `dependencies` table — stores finish-to-start relationships between tasks, with a unique constraint to prevent duplicates
+- Row Level Security (RLS) enabled on all three tables — users can only access their own data
+
+---
+
+### Issue #3 — Authentication
+
+Built a complete authentication system using Supabase Auth, including all pages, API routes, and reusable UI components.
+
+### Added
+
+- Sign up page — creates a new account with email and password
+- Login page — signs in an existing user
+- Forgot password page — sends a password reset email via Supabase
+- Update password page — lets the user set a new password after clicking the reset link
+- Logout button — signs the user out and redirects to login
+- Delete account button and API route — permanently deletes the user's account and all their data
+- Auth callback route — handles the Supabase redirect after email confirmation and password reset
+- Dashboard placeholder page — confirms authentication is working with a protected route
+- Reusable `Button` and `Input` UI components
+
+### Fixed
+
+- **Password reset flow and expired link error message** — Supabase was sending password reset emails that pointed to the wrong page. Fixed the redirect URL so the link correctly lands on the Update Password page. Also added a user-friendly error message when a reset link has expired, rather than showing a blank or broken page.
+- **Implicit flow and missing session on Update Password page** — The Update Password page was not correctly detecting the session when Supabase used its implicit (hash-based) auth flow. Fixed the page to listen for the auth session event properly so users who click a valid reset link are no longer incorrectly told their session is missing.
+
 ## [April 17 2026] — Issue #1 Complete
 
 ### Added

@@ -21,10 +21,10 @@
 | Feature                                       | Status             | Notes                |
 | --------------------------------------------- | ------------------ | -------------------- |
 | Project setup (Next.js + Tailwind + Supabase) | ✅ Complete 4.17.26 | First thing to build |
-| Authentication — sign up                      | ⬜ Not started      |                      |
-| Authentication — login / logout               | ⬜ Not started      |                      |
-| Authentication — password reset               | ⬜ Not started      |                      |
-| Authentication — delete account               | ⬜ Not started      |                      |
+| Authentication — sign up                      | ✅ Complete 4.18.26 |                      |
+| Authentication — login / logout               | ✅ Complete 4.18.26 |                      |
+| Authentication — password reset               | ✅ Complete 4.18.26 |                      |
+| Authentication — delete account               | ✅ Complete 4.18.26 |                      |
 | Timeline creation                             | ⬜ Not started      |                      |
 | Task creation                                 | ⬜ Not started      |                      |
 | Task editing (inline)                         | ⬜ Not started      |                      |
