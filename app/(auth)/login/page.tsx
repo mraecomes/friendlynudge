@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, FormEvent } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -20,8 +20,11 @@ function mapAuthError(message: string): string {
   return 'Something went wrong connecting to the server. Please try again.'
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get('error')
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -53,6 +56,16 @@ export default function LoginPage() {
   return (
     <>
       <h2 className="text-xl font-semibold text-[#111827] mb-6">Sign in to your account</h2>
+
+      {urlError === 'link_expired' && (
+        <p className="text-sm text-[#DC2626] bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
+          Your password reset link has expired.{' '}
+          <Link href="/forgot-password" className="font-medium underline hover:no-underline">
+            Request a new one
+          </Link>
+          .
+        </p>
+      )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
@@ -105,5 +118,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   )
 }

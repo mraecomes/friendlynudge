@@ -1,17 +1,40 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useEffect, FormEvent } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export default function UpdatePasswordPage() {
+function UpdatePasswordForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [sessionReady, setSessionReady] = useState(false)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const code = searchParams.get('code')
+
+    if (!code) {
+      setSessionReady(true)
+      return
+    }
+
+    const supabase = createClient()
+    supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
+      if (exchangeError) {
+        setError('This reset link has expired or has already been used. Please request a new one.')
+      } else {
+        router.replace('/update-password')
+        setSessionReady(true)
+      }
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mismatch = confirm.length > 0 && password !== confirm
 
@@ -52,9 +75,35 @@ export default function UpdatePasswordPage() {
     }
   }
 
+  if (!sessionReady && !error) {
+    return (
+      <div className="text-center py-4">
+        <div className="w-6 h-6 border-2 border-[#1E3A5F] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-sm text-[#6B7280]">Verifying reset link…</p>
+      </div>
+    )
+  }
+
+  if (error && !sessionReady) {
+    return (
+      <div className="text-center">
+        <p className="text-sm text-[#DC2626] bg-red-50 border border-red-200 rounded-lg px-3 py-3 mb-4">
+          {error}
+        </p>
+        <Link
+          href="/forgot-password"
+          className="text-sm text-[#2563EB] font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded"
+        >
+          Request a new reset link
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <>
       <h2 className="text-xl font-semibold text-[#111827] mb-2">Set a new password</h2>
+
       <p className="text-sm text-[#6B7280] mb-6">
         Choose a strong password — at least 8 characters.
       </p>
@@ -97,5 +146,13 @@ export default function UpdatePasswordPage() {
         </Button>
       </form>
     </>
+  )
+}
+
+export default function UpdatePasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <UpdatePasswordForm />
+    </Suspense>
   )
 }
