@@ -429,6 +429,7 @@ Commit types:
 - Every feature branch must be merged via a pull request — never merge directly
 - Before opening a pull request, confirm the app runs without errors locally
 - Pull request title should reference the GitHub Issue number: `feat: add task creation (#3)`
+- Every pull request description must include `Closes #[issue number]` — this automatically closes the related GitHub issue when the PR is merged
 - Once merged, delete the feature branch to keep the repository clean
 
 ### What Belongs in a Commit
