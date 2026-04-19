@@ -1,7 +1,7 @@
 'use client'
 
 import { useTimeline } from '@/lib/hooks/useTimelines'
-import { TimelineEmptyState } from './TimelineEmptyState'
+import { TaskList } from '@/components/tasks/TaskList'
 
 interface TimelinePageBodyProps {
   timelineId: string
@@ -20,5 +20,5 @@ export function TimelinePageBody({ timelineId }: TimelinePageBodyProps) {
     )
   }
 
-  return <TimelineEmptyState />
+  return <TaskList timelineId={timelineId} />
 }
