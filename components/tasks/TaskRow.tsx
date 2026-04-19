@@ -13,8 +13,6 @@ type ActiveField = 'name' | 'start_date' | 'duration_days' | 'end_date' | 'statu
 interface TaskRowProps {
   task: Task
   timelineId: string
-  isNew?: boolean
-  onNewTaskNameBlur?: (id: string, name: string) => void
 }
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
@@ -24,7 +22,7 @@ const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: 'blocked',     label: 'Blocked' },
 ]
 
-export function TaskRow({ task, timelineId, isNew = false, onNewTaskNameBlur }: TaskRowProps) {
+export function TaskRow({ task, timelineId }: TaskRowProps) {
   const { mutateAsync: updateTask, isPending: isSaving } = useUpdateTask(timelineId)
   const { mutateAsync: deleteTask } = useDeleteTask(timelineId)
 
@@ -37,7 +35,7 @@ export function TaskRow({ task, timelineId, isNew = false, onNewTaskNameBlur }: 
     opacity: isDragging ? 0.5 : 1,
   }
 
-  const [activeField, setActiveField] = useState<ActiveField>(isNew ? 'name' : null)
+  const [activeField, setActiveField] = useState<ActiveField>(null)
   const [localValues, setLocalValues] = useState({
     name: task.name,
     start_date: task.start_date,
@@ -100,11 +98,6 @@ export function TaskRow({ task, timelineId, isNew = false, onNewTaskNameBlur }: 
   function handleNameBlur() {
     const trimmed = localValues.name.trim()
     setActiveField(null)
-
-    if (isNew && onNewTaskNameBlur) {
-      onNewTaskNameBlur(task.id, trimmed)
-      return
-    }
 
     if (!trimmed) {
       setLocalValues((v) => ({ ...v, name: task.name }))
