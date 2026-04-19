@@ -71,6 +71,9 @@ None — ready to start building.
 - Confirm Supabase project URL and keys are accessible before first session
 - Decide on a Vercel project name before first deploy
 - Create a Resend account before starting v1 notifications
+- Turn email confirmation back ON in Supabase before launch
+- Decide on final product/brand name for the app (separate from the Vercel project name)
+- Move delete account CTA to a Settings page (flagged during Issue #3 UAT)
 
 ---
 

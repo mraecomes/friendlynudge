@@ -226,6 +226,7 @@ Duration in days and end date must always stay in sync. If the user edits durati
 - **Loading states** — show a skeleton or spinner whenever data is being fetched
 - **Today line** — the Gantt chart always shows a vertical line marking today's date
 - **Gantt and task list always scroll in sync**
+- **Delete account belongs in Settings** — the delete account CTA should live in a Settings page, not on the main dashboard. This was flagged during Issue #3 UAT and is deferred until navigation and settings are built. Do not add it to the dashboard in any future work
 
 ---
 
