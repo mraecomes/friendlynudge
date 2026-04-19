@@ -18,22 +18,27 @@ function UpdatePasswordForm() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    const supabase = createClient() // must be first — browser client auto-processes hash tokens (implicit flow)
     const code = searchParams.get('code')
 
-    if (!code) {
-      setSessionReady(true)
-      return
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
+        if (exchangeError) {
+          setError('This reset link has expired or has already been used. Please request a new one.')
+        } else {
+          router.replace('/update-password')
+          setSessionReady(true)
+        }
+      })
+    } else {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          setSessionReady(true)
+        } else {
+          setError('This reset link has expired or has already been used. Please request a new one.')
+        }
+      })
     }
-
-    const supabase = createClient()
-    supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
-      if (exchangeError) {
-        setError('This reset link has expired or has already been used. Please request a new one.')
-      } else {
-        router.replace('/update-password')
-        setSessionReady(true)
-      }
-    })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mismatch = confirm.length > 0 && password !== confirm
@@ -58,8 +63,9 @@ function UpdatePasswordForm() {
       const { error: authError } = await supabase.auth.updateUser({ password })
 
       if (authError) {
-        if (authError.message.includes('expired') || authError.message.includes('invalid')) {
-          setError('This reset link has expired. Please request a new one.')
+        const msg = authError.message.toLowerCase()
+        if (msg.includes('expired') || msg.includes('invalid') || msg.includes('session')) {
+          setError('Your session has expired. Please request a new password reset link.')
         } else {
           setError('Something went wrong updating your password. Please try again.')
         }
