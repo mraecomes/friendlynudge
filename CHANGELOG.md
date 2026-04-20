@@ -26,6 +26,43 @@
 
 ---
 
+## [April 19 2026] — Issues #4 and #5 Complete
+
+### Issue #4 — Timeline Creation & Management
+
+### Added
+
+- Timeline creation modal on the dashboard — users can create a new timeline with a name and optional start/end dates
+- Timeline cards on the dashboard — display timeline name, created date, and date range; link through to the timeline detail page
+- Timeline detail page (`/timeline/[id]`) — shows the timeline header with name and dates, with a not-found state if the ID does not exist
+- Skeleton loaders on the dashboard and timeline detail page while data is fetching
+- Row Level Security enforced — all timeline data is scoped to the logged-in user
+
+### Fixed
+
+- **Date validation in the creation modal** — end date cannot be set before start date; the submit button is disabled and an inline error message is shown until the dates are corrected
+
+---
+
+### Issue #5 — Task CRUD
+
+### Added
+
+- Task creation via a local pending row — clicking "Add task" appends a focused input row; the task is only saved to the database once the user types a name
+- Inline editing for all task fields — name, start date, duration (days), end date, and status are all editable in place with no modals
+- Drag-to-reorder — tasks can be dragged up and down the list; order is persisted to the database
+- Status badges — color-coded pill labels for Not Started, In Progress, Complete, and Blocked
+- Task deletion — trash icon on hover with a confirmation prompt before deleting
+- Empty state — helpful prompt shown when a timeline has no tasks yet
+- Consistent MM/DD/YYYY date formatting across all date displays in the app (task rows, timeline cards, dashboard)
+
+### Fixed
+
+- **"Add task" showed a validation error immediately** — clicking "Add task" was calling the API with an empty name before the user had a chance to type anything. Fixed by replacing the immediate API call with a local-only pending row that only writes to the database after the user provides a name.
+- **Duration and end date sync** — editing start date, duration, or end date now automatically recalculates the other fields to stay consistent at all times
+
+---
+
 ## [April 18 2026] — Issues #2 and #3 Complete
 
 ### Issue #2 — Database Schema
@@ -102,4 +139,3 @@ Built a complete authentication system using Supabase Auth, including all pages,
 - Auth: Supabase Auth with email/password for MVP, Google OAuth deferred to v1
 
 ---
-
