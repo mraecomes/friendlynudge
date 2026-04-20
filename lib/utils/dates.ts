@@ -15,3 +15,10 @@ export function daysBetween(startStr: string, endStr: string): number {
 export function todayISO(): string {
   return new Date().toISOString().split('T')[0]
 }
+
+// Converts YYYY-MM-DD → MM/DD/YYYY for display.
+// String split avoids timezone offset issues caused by new Date() parsing.
+export function formatDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-')
+  return `${month}/${day}/${year}`
+}

@@ -13,7 +13,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useTasksByTimeline, useCreateTask, useReorderTasks } from '@/lib/hooks/useTasks'
 import { TaskRow } from './TaskRow'
 import { Button } from '@/components/ui/button'
-import { todayISO, addDays } from '@/lib/utils/dates'
+import { todayISO, addDays, formatDate } from '@/lib/utils/dates'
 
 interface TaskListProps {
   timelineId: string
@@ -216,9 +216,9 @@ function PendingTaskRow({ timelineId, position, onDone }: PendingTaskRowProps) {
         </div>
 
         {/* Static defaults — not editable until task is saved */}
-        <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{today}</div>
+        <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{formatDate(today)}</div>
         <div className="w-16 flex-shrink-0 text-sm text-[#9CA3AF] px-1">1d</div>
-        <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{defaultEnd}</div>
+        <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{formatDate(defaultEnd)}</div>
         <div className="w-32 flex-shrink-0">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-400">
             Not Started

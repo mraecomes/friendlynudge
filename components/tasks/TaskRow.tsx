@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useUpdateTask, useDeleteTask } from '@/lib/hooks/useTasks'
 import { TaskStatusBadge } from './TaskStatusBadge'
-import { addDays, daysBetween } from '@/lib/utils/dates'
+import { addDays, daysBetween, formatDate } from '@/lib/utils/dates'
 import type { Task, TaskStatus, TaskUpdate } from '@/types'
 
 type ActiveField = 'name' | 'start_date' | 'duration_days' | 'end_date' | 'status' | null
@@ -255,7 +255,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
               onClick={() => setActiveField('start_date')}
               className="w-full text-left text-sm text-[#374151] hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {localValues.start_date}
+              {formatDate(localValues.start_date)}
             </button>
           )}
         </div>
@@ -299,7 +299,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
               onClick={() => setActiveField('end_date')}
               className="w-full text-left text-sm text-[#374151] hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {localValues.end_date}
+              {formatDate(localValues.end_date)}
             </button>
           )}
         </div>

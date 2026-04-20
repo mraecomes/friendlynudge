@@ -2,17 +2,14 @@
 
 import Link from 'next/link'
 import type { Timeline } from '@/types'
+import { formatDate } from '@/lib/utils/dates'
 
 interface TimelineCardProps {
   timeline: Timeline
 }
 
 export function TimelineCard({ timeline }: TimelineCardProps) {
-  const createdAt = new Date(timeline.created_at).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const createdAt = formatDate(timeline.created_at.split('T')[0])
 
   return (
     <Link
@@ -33,7 +30,7 @@ export function TimelineCard({ timeline }: TimelineCardProps) {
           <p className="text-xs text-[#6B7280] mt-0.5">Created {createdAt}</p>
           {(timeline.start_date || timeline.end_date) && (
             <p className="text-xs text-[#6B7280] mt-0.5">
-              {timeline.start_date ?? '—'} → {timeline.end_date ?? '—'}
+              {timeline.start_date ? formatDate(timeline.start_date) : '—'} → {timeline.end_date ? formatDate(timeline.end_date) : '—'}
             </p>
           )}
         </div>
