@@ -8,10 +8,10 @@
 
 ## Current Status
 
-**Build Phase:** Pre-build — Planning complete, ready to start MVP
-**Last Updated:** April 2026
-**Last Session:** Planning phase — all planning documents created
-**Next Session Goal:** Project setup (Next.js + Tailwind + Supabase configuration)
+**Build Phase:** MVP — In Progress
+**Last Updated:** April 19, 2026
+**Last Session:** Issues #4 and #5 — Timeline creation & management, Task CRUD (create, edit, delete, reorder)
+**Next Session Goal:** Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
 
 ---
 
@@ -25,18 +25,18 @@
 | Authentication — login / logout               | ✅ Complete 4.18.26 |                      |
 | Authentication — password reset               | ✅ Complete 4.18.26 |                      |
 | Authentication — delete account               | ✅ Complete 4.18.26 |                      |
-| Timeline creation                             | ⬜ Not started      |                      |
-| Task creation                                 | ⬜ Not started      |                      |
-| Task editing (inline)                         | ⬜ Not started      |                      |
-| Task deletion                                 | ⬜ Not started      |                      |
-| Task reordering (drag and drop)               | ⬜ Not started      |                      |
+| Timeline creation                             | ✅ Complete 4.19.26 |                      |
+| Task creation                                 | ✅ Complete 4.19.26 |                      |
+| Task editing (inline)                         | ✅ Complete 4.19.26 |                      |
+| Task deletion                                 | ✅ Complete 4.19.26 |                      |
+| Task reordering (drag and drop)               | ✅ Complete 4.19.26 |                      |
 | Dependency logic (Finish-to-Start)            | ⬜ Not started      | Most complex feature |
 | Dependency cascading recalculation            | ⬜ Not started      |                      |
 | Circular dependency detection                 | ⬜ Not started      |                      |
 | Gantt chart visualization                     | ⬜ Not started      | Uses Frappe Gantt    |
 | Status color coding on Gantt                  | ⬜ Not started      |                      |
 | Today line on Gantt                           | ⬜ Not started      |                      |
-| Data persistence (Supabase)                   | ⬜ Not started      |                      |
+| Data persistence (Supabase)                   | ✅ Complete 4.19.26 |                      |
 
 
 **Legend:** ⬜ Not started · 🔄 In progress · ✅ Complete · 🚫 Blocked
@@ -94,13 +94,11 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ## Recently Completed
 
-- ✅ Product brainstorm document
-- ✅ PRD (Product Requirements Document)
-- ✅ CLAUDE.md (Claude Code instruction file)
-- ✅ ARCHITECTURE.md (Technical architecture)
-- ✅ CHANGELOG.md
-- ✅ STATUS.md (this file)
-- ✅ .env.example
+- ✅ Issue #1 — Project setup (Next.js + Tailwind + Supabase)
+- ✅ Issue #2 — Database schema (timelines, tasks, dependencies, RLS)
+- ✅ Issue #3 — Authentication (sign up, login, logout, password reset, delete account)
+- ✅ Issue #4 — Timeline creation & management
+- ✅ Issue #5 — Task CRUD (create, inline edit, delete, drag-to-reorder)
 
 ---
 
@@ -121,5 +119,5 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ---
 
-*Last updated: April 2026*
+*Last updated: April 19, 2026*
 *Product owner: Mallory Comes*
