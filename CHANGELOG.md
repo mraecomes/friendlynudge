@@ -139,3 +139,4 @@ Built a complete authentication system using Supabase Auth, including all pages,
 - Auth: Supabase Auth with email/password for MVP, Google OAuth deferred to v1
 
 ---
+

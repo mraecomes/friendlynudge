@@ -45,3 +45,14 @@ export type TaskInsert = Omit<Task, 'id' | 'created_at' | 'updated_at'>
 export type TaskUpdate = Partial<Omit<TaskInsert, 'timeline_id'>>
 
 export type DependencyInsert = Omit<Dependency, 'id'>
+
+// ─── Dependency Operation Results ─────────────────────────────────────────────
+
+export interface CycleError {
+  cycleTaskIds: string[]  // IDs of tasks forming the cycle, in order
+}
+
+export interface TaskUpdateResponse {
+  task: Task              // The directly updated task
+  cascaded: Task[]        // Downstream tasks recalculated (empty if none)
+}
