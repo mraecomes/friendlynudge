@@ -9,9 +9,9 @@
 ## Current Status
 
 **Build Phase:** MVP — In Progress
-**Last Updated:** April 19, 2026
-**Last Session:** Issues #4 and #5 — Timeline creation & management, Task CRUD (create, edit, delete, reorder)
-**Next Session Goal:** Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
+**Last Updated:** April 21, 2026
+**Last Session:** Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
+**Next Session Goal:** Issue #7 — Gantt chart visualization (Frappe Gantt, status color coding, today line)
 
 ---
 
@@ -30,9 +30,9 @@
 | Task editing (inline)                         | ✅ Complete 4.19.26 |                      |
 | Task deletion                                 | ✅ Complete 4.19.26 |                      |
 | Task reordering (drag and drop)               | ✅ Complete 4.19.26 |                      |
-| Dependency logic (Finish-to-Start)            | 🔄 In Progress     | Most complex feature |
-| Dependency cascading recalculation            | 🔄 In Progress     |                      |
-| Circular dependency detection                 | 🔄 In Progress     |                      |
+| Dependency logic (Finish-to-Start)            | ✅ Complete 4.21.26 | Most complex feature |
+| Dependency cascading recalculation            | ✅ Complete 4.21.26 |                      |
+| Circular dependency detection                 | ✅ Complete 4.21.26 |                      |
 | Gantt chart visualization                     | ⬜ Not started      | Uses Frappe Gantt    |
 | Status color coding on Gantt                  | ⬜ Not started      |                      |
 | Today line on Gantt                           | ⬜ Not started      |                      |
@@ -99,6 +99,7 @@ These decisions need to be made before the relevant feature is built. They do no
 - ✅ Issue #3 — Authentication (sign up, login, logout, password reset, delete account)
 - ✅ Issue #4 — Timeline creation & management
 - ✅ Issue #5 — Task CRUD (create, inline edit, delete, drag-to-reorder)
+- ✅ Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
 
 ---
 
@@ -119,5 +120,5 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ---
 
-*Last updated: April 19, 2026*
+*Last updated: April 21, 2026*
 *Product owner: Mallory Comes*
