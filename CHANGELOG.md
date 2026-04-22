@@ -26,6 +26,33 @@
 
 ---
 
+## [April 21 2026] — Issue #6 Complete
+
+### Issue #6 — Dependency Logic
+
+### Added
+
+- Finish-to-Start dependency engine — users can define that Task B cannot start until Task A is complete, via a searchable "Depends On" column in the task list
+- Cascading date recalculation — when a predecessor task's start date or duration changes, all downstream successor tasks automatically recalculate their start and end dates, recursively through the full chain
+- Immediate recalculation on dependency creation — the moment a dependency is saved, the successor task's dates snap to the correct position without any manual edit
+- Circular dependency detection — before saving any dependency, the system checks for cycles and rejects the save with a plain-English error message naming the exact tasks involved (e.g. "A → B → C → A")
+- Cascade highlight animation — rows affected by a cascading recalculation briefly highlight in blue so the user can see exactly what changed
+- `lib/dependencies/graph.ts` — pure TypeScript functions for cycle detection, downstream ID lookup, and topological sort; fully isolated from the database
+- `lib/dependencies/cascade.ts` — pure TypeScript function that computes all downstream date updates for a changed predecessor
+- `supabase/migrations/20260420000000_update_task_with_cascade.sql` — PostgreSQL RPC function that updates the primary task and all cascaded tasks in a single atomic transaction; any failure rolls back everything
+
+### Fixed
+
+- **Stale dependency cache after task deletion** — deleting a task now correctly invalidates the client-side dependency cache, so subsequent dependency operations work immediately without a page refresh
+
+### Decisions Made
+
+- Cascade saves are atomic via a PostgreSQL RPC function — if any part of the cascade fails, the entire update (including the original task change) rolls back and the user receives a clear error message. No silent partial saves.
+- Custom searchable combobox built without any new packages — filters the task list as the user types, keyboard-navigable, matches the existing design system
+- Circular detection runs server-side before any insert, so no invalid dependency records can reach the database
+
+---
+
 ## [April 19 2026] — Issues #4 and #5 Complete
 
 ### Issue #4 — Timeline Creation & Management
