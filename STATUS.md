@@ -30,9 +30,9 @@
 | Task editing (inline)                         | ✅ Complete 4.19.26 |                      |
 | Task deletion                                 | ✅ Complete 4.19.26 |                      |
 | Task reordering (drag and drop)               | ✅ Complete 4.19.26 |                      |
-| Dependency logic (Finish-to-Start)            | ⬜ Not started      | Most complex feature |
-| Dependency cascading recalculation            | ⬜ Not started      |                      |
-| Circular dependency detection                 | ⬜ Not started      |                      |
+| Dependency logic (Finish-to-Start)            | 🔄 In Progress     | Most complex feature |
+| Dependency cascading recalculation            | 🔄 In Progress     |                      |
+| Circular dependency detection                 | 🔄 In Progress     |                      |
 | Gantt chart visualization                     | ⬜ Not started      | Uses Frappe Gantt    |
 | Status color coding on Gantt                  | ⬜ Not started      |                      |
 | Today line on Gantt                           | ⬜ Not started      |                      |

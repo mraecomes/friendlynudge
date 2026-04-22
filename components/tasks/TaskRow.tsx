@@ -4,15 +4,21 @@ import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useUpdateTask, useDeleteTask } from '@/lib/hooks/useTasks'
+import { useCreateDependency, useDeleteDependency } from '@/lib/hooks/useDependencies'
 import { TaskStatusBadge } from './TaskStatusBadge'
+import { DependencyCombobox } from './DependencyCombobox'
 import { addDays, daysBetween, formatDate } from '@/lib/utils/dates'
-import type { Task, TaskStatus, TaskUpdate } from '@/types'
+import type { Task, TaskStatus, TaskUpdate, Dependency } from '@/types'
 
-type ActiveField = 'name' | 'start_date' | 'duration_days' | 'end_date' | 'status' | null
+type ActiveField = 'name' | 'start_date' | 'duration_days' | 'end_date' | 'status' | 'depends_on' | null
 
 interface TaskRowProps {
   task: Task
   timelineId: string
+  allTasks: Task[]
+  dependencies: Dependency[]
+  isHighlighted: boolean
+  onCascade: (ids: string[]) => void
 }
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
@@ -22,9 +28,11 @@ const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: 'blocked',     label: 'Blocked' },
 ]
 
-export function TaskRow({ task, timelineId }: TaskRowProps) {
+export function TaskRow({ task, timelineId, allTasks, dependencies, isHighlighted, onCascade }: TaskRowProps) {
   const { mutateAsync: updateTask, isPending: isSaving } = useUpdateTask(timelineId)
   const { mutateAsync: deleteTask } = useDeleteTask(timelineId)
+  const { mutateAsync: createDependency, isPending: isAddingDep } = useCreateDependency(timelineId)
+  const { mutateAsync: deleteDependency, isPending: isDeletingDep } = useDeleteDependency(timelineId)
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: task.id })
@@ -36,6 +44,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
   }
 
   const [activeField, setActiveField] = useState<ActiveField>(null)
+  // localValues tracks edits in progress; initialized from task on mount
   const [localValues, setLocalValues] = useState({
     name: task.name,
     start_date: task.start_date,
@@ -47,18 +56,36 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
 
   const nameInputRef = useRef<HTMLInputElement>(null)
 
-  // Sync local values when task data changes from the server (e.g. after reorder)
-  useEffect(() => {
-    if (activeField === null) {
-      setLocalValues({
-        name: task.name,
-        start_date: task.start_date,
-        duration_days: String(task.duration_days),
-        end_date: task.end_date,
-        status: task.status,
-      })
-    }
-  }, [task, activeField])
+  // The current predecessor dependency record for this task (if any)
+  const currentDep = dependencies.find((d) => d.successor_id === task.id) ?? null
+  const predecessorTask = currentDep
+    ? allTasks.find((t) => t.id === currentDep.predecessor_id) ?? null
+    : null
+
+  // Tasks eligible to be predecessors: all tasks except this one
+  const eligiblePredecessors = allTasks.filter((t) => t.id !== task.id)
+
+  // Displayed values: show localValues while editing or saving (optimistic),
+  // otherwise show the latest server values from task props.
+  const displayed = {
+    name:          (activeField === 'name'          || isSaving) ? localValues.name          : task.name,
+    start_date:    (activeField === 'start_date'    || isSaving) ? localValues.start_date    : task.start_date,
+    duration_days: (activeField === 'duration_days' || isSaving) ? localValues.duration_days : String(task.duration_days),
+    end_date:      (activeField === 'end_date'      || isSaving) ? localValues.end_date      : task.end_date,
+    status:        localValues.status,
+  }
+
+  // When activating a field, sync localValues from the current saved task values
+  function activateField(field: ActiveField) {
+    setLocalValues({
+      name: task.name,
+      start_date: task.start_date,
+      duration_days: String(task.duration_days),
+      end_date: task.end_date,
+      status: task.status,
+    })
+    setActiveField(field)
+  }
 
   useEffect(() => {
     if (activeField === 'name') nameInputRef.current?.focus()
@@ -67,10 +94,12 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
   async function commit(updates: TaskUpdate) {
     setRowError('')
     try {
-      await updateTask({ id: task.id, ...updates })
+      const response = await updateTask({ id: task.id, ...updates })
+      if (response.cascaded.length > 0) {
+        onCascade(response.cascaded.map((t) => t.id))
+      }
     } catch (err) {
       setRowError(err instanceof Error ? err.message : 'Failed to save. Please try again.')
-      // Revert local display to last known saved values
       setLocalValues({
         name: task.name,
         start_date: task.start_date,
@@ -81,7 +110,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
     }
   }
 
-  function cancelField(field: ActiveField) {
+  function cancelField() {
     setActiveField(null)
     setLocalValues({
       name: task.name,
@@ -111,7 +140,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
 
   function handleNameKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') nameInputRef.current?.blur()
-    if (e.key === 'Escape') cancelField('name')
+    if (e.key === 'Escape') cancelField()
   }
 
   // ─── Start Date ───────────────────────────────────────────────────────────
@@ -148,7 +177,7 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
 
   function handleDurationKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') e.currentTarget.blur()
-    if (e.key === 'Escape') cancelField('duration_days')
+    if (e.key === 'Escape') cancelField()
   }
 
   // ─── End Date ─────────────────────────────────────────────────────────────
@@ -181,6 +210,42 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
     commit({ status: newStatus })
   }
 
+  // ─── Dependency ───────────────────────────────────────────────────────────
+
+  async function handleDependencyChange(newPredecessorId: string | null) {
+    setRowError('')
+    try {
+      if (currentDep) {
+        await deleteDependency(currentDep.id)
+      }
+      if (newPredecessorId) {
+        await createDependency({
+          predecessor_id: newPredecessorId,
+          successor_id: task.id,
+          type: 'finish_to_start',
+        })
+        // Immediately cascade: recalculate this task's start date from the predecessor's end date
+        const predecessor = allTasks.find((t) => t.id === newPredecessorId)
+        if (predecessor) {
+          const newStart = addDays(predecessor.end_date, 1)
+          if (newStart !== task.start_date) {
+            const newEnd = addDays(newStart, task.duration_days - 1)
+            const response = await updateTask({
+              id: task.id,
+              start_date: newStart,
+              end_date: newEnd,
+              duration_days: task.duration_days,
+            })
+            // Highlight this task (its dates changed) and all further downstream tasks
+            onCascade([task.id, ...response.cascaded.map((t) => t.id)])
+          }
+        }
+      }
+    } catch (err) {
+      setRowError(err instanceof Error ? err.message : 'Failed to update dependency. Please try again.')
+    }
+  }
+
   // ─── Delete ───────────────────────────────────────────────────────────────
 
   async function handleDelete() {
@@ -199,10 +264,16 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
   const inputClass =
     'w-full px-2 py-1 text-sm border border-[#2563EB] rounded focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white text-[#111827]'
 
+  const isDepPending = isAddingDep || isDeletingDep
+
   return (
     <div ref={setNodeRef} style={style}>
       <div
-        className={`group flex items-center gap-2 px-3 py-2.5 bg-white border border-[#E5E7EB] rounded-lg hover:bg-[#F8FAFC] transition-colors ${isSaving ? 'opacity-60' : ''}`}
+        className={[
+          'group flex items-center gap-2 px-3 py-2.5 bg-white border border-[#E5E7EB] rounded-lg hover:bg-[#F8FAFC] transition-colors',
+          isSaving ? 'opacity-60' : '',
+          isHighlighted ? 'ring-2 ring-blue-200 bg-[#EFF6FF] border-blue-200' : '',
+        ].join(' ')}
       >
         {/* Drag handle */}
         <button
@@ -231,10 +302,10 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
             />
           ) : (
             <button
-              onClick={() => setActiveField('name')}
+              onClick={() => activateField('name')}
               className="w-full text-left text-sm text-[#111827] truncate hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {localValues.name || <span className="text-[#9CA3AF]">Untitled task</span>}
+              {displayed.name || <span className="text-[#9CA3AF]">Untitled task</span>}
             </button>
           )}
         </div>
@@ -252,10 +323,10 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
             />
           ) : (
             <button
-              onClick={() => setActiveField('start_date')}
+              onClick={() => activateField('start_date')}
               className="w-full text-left text-sm text-[#374151] hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {formatDate(localValues.start_date)}
+              {formatDate(displayed.start_date)}
             </button>
           )}
         </div>
@@ -275,10 +346,10 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
             />
           ) : (
             <button
-              onClick={() => setActiveField('duration_days')}
+              onClick={() => activateField('duration_days')}
               className="w-full text-left text-sm text-[#374151] hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {localValues.duration_days}d
+              {displayed.duration_days}d
             </button>
           )}
         </div>
@@ -296,10 +367,10 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
             />
           ) : (
             <button
-              onClick={() => setActiveField('end_date')}
+              onClick={() => activateField('end_date')}
               className="w-full text-left text-sm text-[#374151] hover:text-[#2563EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded px-1"
             >
-              {formatDate(localValues.end_date)}
+              {formatDate(displayed.end_date)}
             </button>
           )}
         </div>
@@ -320,10 +391,35 @@ export function TaskRow({ task, timelineId }: TaskRowProps) {
             </select>
           ) : (
             <button
-              onClick={() => setActiveField('status')}
+              onClick={() => activateField('status')}
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded"
             >
-              <TaskStatusBadge status={localValues.status} />
+              <TaskStatusBadge status={displayed.status} />
+            </button>
+          )}
+        </div>
+
+        {/* Depends On */}
+        <div className="w-36 flex-shrink-0">
+          {activeField === 'depends_on' ? (
+            <DependencyCombobox
+              tasks={eligiblePredecessors}
+              value={currentDep?.predecessor_id ?? null}
+              onChange={handleDependencyChange}
+              onClose={() => setActiveField(null)}
+              disabled={isDepPending}
+            />
+          ) : (
+            <button
+              onClick={() => setActiveField('depends_on')}
+              disabled={isDepPending}
+              className="w-full text-left text-sm truncate px-1 rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] disabled:opacity-50 disabled:cursor-wait"
+            >
+              {predecessorTask ? (
+                <span className="text-[#374151] hover:text-[#2563EB]">{predecessorTask.name}</span>
+              ) : (
+                <span className="text-[#9CA3AF] hover:text-[#6B7280]">—</span>
+              )}
             </button>
           )}
         </div>

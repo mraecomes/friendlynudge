@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -11,6 +11,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useTasksByTimeline, useCreateTask, useReorderTasks } from '@/lib/hooks/useTasks'
+import { useDependenciesByTimeline } from '@/lib/hooks/useDependencies'
 import { TaskRow } from './TaskRow'
 import { Button } from '@/components/ui/button'
 import { todayISO, addDays, formatDate } from '@/lib/utils/dates'
@@ -21,13 +22,29 @@ interface TaskListProps {
 
 export function TaskList({ timelineId }: TaskListProps) {
   const { data: tasks, isLoading, isError, error } = useTasksByTimeline(timelineId)
+  const { data: dependencies = [] } = useDependenciesByTimeline(timelineId)
   const { mutateAsync: reorderTasks } = useReorderTasks(timelineId)
 
   const [showPendingRow, setShowPendingRow] = useState(false)
+  const [highlightedIds, setHighlightedIds] = useState<Set<string>>(new Set())
+  const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   )
+
+  const handleCascade = useCallback((ids: string[]) => {
+    if (ids.length === 0) return
+    if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current)
+    setHighlightedIds(new Set(ids))
+    highlightTimerRef.current = setTimeout(() => setHighlightedIds(new Set()), 1500)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current)
+    }
+  }, [])
 
   function handleAddTask() {
     setShowPendingRow(true)
@@ -78,6 +95,7 @@ export function TaskList({ timelineId }: TaskListProps) {
           <div className="w-16 flex-shrink-0">Days</div>
           <div className="w-28 flex-shrink-0">End</div>
           <div className="w-32 flex-shrink-0">Status</div>
+          <div className="w-36 flex-shrink-0">Depends On</div>
           <div className="w-4 flex-shrink-0" />
         </div>
       )}
@@ -92,6 +110,10 @@ export function TaskList({ timelineId }: TaskListProps) {
                   key={task.id}
                   task={task}
                   timelineId={timelineId}
+                  allTasks={tasks}
+                  dependencies={dependencies}
+                  isHighlighted={highlightedIds.has(task.id)}
+                  onCascade={handleCascade}
                 />
               ))}
             </div>
@@ -140,8 +162,6 @@ export function TaskList({ timelineId }: TaskListProps) {
 }
 
 // ─── PendingTaskRow ───────────────────────────────────────────────────────────
-// Local-only row shown before a task exists in the database.
-// The API is only called once the user commits a non-empty name.
 
 interface PendingTaskRowProps {
   timelineId: string
@@ -198,10 +218,7 @@ function PendingTaskRow({ timelineId, position, onDone }: PendingTaskRowProps) {
   return (
     <div>
       <div className="flex items-center gap-2 px-3 py-2.5 bg-white border border-[#2563EB] rounded-lg shadow-sm">
-        {/* Drag handle placeholder */}
         <div className="w-4 flex-shrink-0" />
-
-        {/* Name — focused, editable */}
         <div className="flex-1 min-w-0">
           <input
             ref={inputRef}
@@ -214,8 +231,6 @@ function PendingTaskRow({ timelineId, position, onDone }: PendingTaskRowProps) {
             disabled={isPending}
           />
         </div>
-
-        {/* Static defaults — not editable until task is saved */}
         <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{formatDate(today)}</div>
         <div className="w-16 flex-shrink-0 text-sm text-[#9CA3AF] px-1">1d</div>
         <div className="w-28 flex-shrink-0 text-sm text-[#9CA3AF] px-1">{formatDate(defaultEnd)}</div>
@@ -224,8 +239,7 @@ function PendingTaskRow({ timelineId, position, onDone }: PendingTaskRowProps) {
             Not Started
           </span>
         </div>
-
-        {/* Delete placeholder */}
+        <div className="w-36 flex-shrink-0 text-sm text-[#9CA3AF] px-1">—</div>
         <div className="w-4 flex-shrink-0" />
       </div>
 
@@ -248,6 +262,7 @@ function TaskListSkeleton() {
         <div className="h-3 bg-gray-100 rounded w-16 flex-shrink-0" />
         <div className="h-3 bg-gray-100 rounded w-28 flex-shrink-0" />
         <div className="h-3 bg-gray-100 rounded w-32 flex-shrink-0" />
+        <div className="h-3 bg-gray-100 rounded w-36 flex-shrink-0" />
         <div className="w-4 flex-shrink-0" />
       </div>
       <div className="space-y-1.5">
@@ -259,6 +274,7 @@ function TaskListSkeleton() {
             <div className="w-16 h-4 bg-gray-100 rounded flex-shrink-0" />
             <div className="w-28 h-4 bg-gray-100 rounded flex-shrink-0" />
             <div className="w-32 h-4 bg-gray-100 rounded flex-shrink-0" />
+            <div className="w-36 h-4 bg-gray-100 rounded flex-shrink-0" />
             <div className="w-4 h-4 bg-gray-100 rounded flex-shrink-0" />
           </div>
         ))}

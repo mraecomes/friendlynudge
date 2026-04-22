@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Task, TaskInsert, TaskUpdate } from '@/types'
+import type { Task, TaskInsert, TaskUpdate, TaskUpdateResponse } from '@/types'
 
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ export function useCreateTask(timelineId: string) {
 
 // ─── Update Task ──────────────────────────────────────────────────────────────
 
-async function updateTask({ id, ...payload }: TaskUpdate & { id: string }): Promise<Task> {
+async function updateTask({ id, ...payload }: TaskUpdate & { id: string }): Promise<TaskUpdateResponse> {
   const res = await fetch(`/api/tasks/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -71,10 +71,12 @@ export function useUpdateTask(timelineId: string) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: updateTask,
-    onSuccess: (updated) => {
-      queryClient.setQueryData<Task[]>(taskKeys.byTimeline(timelineId), (old) =>
-        old ? old.map((t) => (t.id === updated.id ? updated : t)) : old
-      )
+    onSuccess: ({ task, cascaded }) => {
+      queryClient.setQueryData<Task[]>(taskKeys.byTimeline(timelineId), (old) => {
+        if (!old) return old
+        const updatedMap = new Map([task, ...cascaded].map((t) => [t.id, t]))
+        return old.map((t) => updatedMap.get(t.id) ?? t)
+      })
     },
   })
 }
@@ -97,6 +99,8 @@ export function useDeleteTask(timelineId: string) {
       queryClient.setQueryData<Task[]>(taskKeys.byTimeline(timelineId), (old) =>
         old ? old.filter((t) => t.id !== deletedId) : old
       )
+      // Cascade delete in DB removes dependency rows; invalidate the client cache too
+      queryClient.invalidateQueries({ queryKey: ['dependencies', timelineId] })
     },
   })
 }
