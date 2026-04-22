@@ -56,3 +56,15 @@ export interface TaskUpdateResponse {
   task: Task              // The directly updated task
   cascaded: Task[]        // Downstream tasks recalculated (empty if none)
 }
+
+// ─── Gantt Chart ───────────────────────────────────────────────────────────────
+
+export interface GanttTask {
+  id: string
+  name: string
+  start: string           // 'YYYY-MM-DD'
+  end: string             // 'YYYY-MM-DD'
+  progress: number        // always 0 for MVP
+  dependencies: string[]  // predecessor task IDs
+  color: string           // hex color based on status
+}
