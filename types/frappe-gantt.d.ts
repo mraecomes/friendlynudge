@@ -38,9 +38,14 @@ declare module 'frappe-gantt' {
     language?: string
     lines?: 'both' | 'horizontal' | 'vertical' | 'none'
     container_height?: number | 'auto'
+    infinite_padding?: boolean
+    on_view_change?: (mode: string) => void
   }
 
   export default class Gantt {
+    gantt_start: Date
+    gantt_end: Date
+    config: { column_width: number; step: number; unit: string }
     constructor(
       wrapper: string | HTMLElement,
       tasks: Record<string, unknown>[],
@@ -48,5 +53,6 @@ declare module 'frappe-gantt' {
     )
     refresh(tasks: Record<string, unknown>[]): void
     change_view_mode(mode?: string): void
+    scroll_current(): void
   }
 }
