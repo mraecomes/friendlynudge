@@ -8,10 +8,10 @@
 
 ## Current Status
 
-**Build Phase:** MVP — In Progress
-**Last Updated:** April 21, 2026
-**Last Session:** Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
-**Next Session Goal:** Issue #7 — Gantt chart visualization (Frappe Gantt, status color coding, today line)
+**Build Phase:** MVP — Complete
+**Last Updated:** April 25, 2026
+**Last Session:** Issue #7 — Gantt chart visualization (Frappe Gantt, status colors, today line, dependency arrow highlighting)
+**Next Session Goal:** MVP review — confirm all features are working end-to-end, then plan v1
 
 ---
 
@@ -33,9 +33,9 @@
 | Dependency logic (Finish-to-Start)            | ✅ Complete 4.21.26 | Most complex feature |
 | Dependency cascading recalculation            | ✅ Complete 4.21.26 |                      |
 | Circular dependency detection                 | ✅ Complete 4.21.26 |                      |
-| Gantt chart visualization                     | ⬜ Not started      | Uses Frappe Gantt    |
-| Status color coding on Gantt                  | ⬜ Not started      |                      |
-| Today line on Gantt                           | ⬜ Not started      |                      |
+| Gantt chart visualization                     | ✅ Complete 4.25.26 | Uses Frappe Gantt    |
+| Status color coding on Gantt                  | ✅ Complete 4.25.26 |                      |
+| Today line on Gantt                           | ✅ Complete 4.25.26 |                      |
 | Data persistence (Supabase)                   | ✅ Complete 4.19.26 |                      |
 
 
@@ -100,6 +100,7 @@ These decisions need to be made before the relevant feature is built. They do no
 - ✅ Issue #4 — Timeline creation & management
 - ✅ Issue #5 — Task CRUD (create, inline edit, delete, drag-to-reorder)
 - ✅ Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
+- ✅ Issue #7 — Gantt chart visualization (Frappe Gantt, status colors, today line, dependency arrow highlighting)
 
 ---
 
@@ -120,5 +121,5 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ---
 
-*Last updated: April 21, 2026*
+*Last updated: April 25, 2026*
 *Product owner: Mallory Comes*

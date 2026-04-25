@@ -26,6 +26,47 @@
 
 ---
 
+## [April 25, 2026] — Issue #7 Complete
+
+### Issue #7 — Gantt Chart Visualization
+
+### Added
+
+- Gantt chart view on the timeline detail page, rendered using Frappe Gantt, showing all tasks as color-coded bars with dependency arrows between them
+- Status color coding on Gantt bars — gray (Not Started), blue (In Progress), green (Complete), orange/red (Blocked)
+- Today line — a vertical marker showing the current date in the chart at all times
+- Popup tooltip on bar hover — shows task name, date range in MM/DD/YYYY format, duration in days, and status label
+- Scroll-to-today on load and on view mode change — the chart automatically centers on the current date
+- Day / Week view toggle — custom button pair (navy active state, outlined inactive) replacing Frappe Gantt's built-in view mode selector
+- Dependency arrow chain highlighting — hovering any task bar or arrow highlights all arrows in that task's connected dependency chain in navy; all other arrows stay gray
+- Transparent wide hit paths cloned over each arrow for a larger hover target area (12px stroke vs 1.5px visible)
+- Invisible `__today_anchor__` task injected into the Gantt data to force the SVG canvas to extend through today + 28 days, even when all real tasks end before today
+- `lib/utils/gantt.ts` — utility that converts `Task[]` + `Dependency[]` into the Frappe Gantt task format with status colors, dependency wiring, and the today anchor
+- `components/gantt/GanttLegend` — color-coded legend below the chart showing all four task statuses
+- `types/frappe-gantt.d.ts` — TypeScript module declaration for the Frappe Gantt library, including `gantt_start`, `gantt_end`, `config`, `infinite_padding`, and `on_view_change`
+
+### Fixed
+
+- **Browser crash on initial render** — `scroll_to: 'today'` caused a runtime crash inside Frappe Gantt (`Cannot read properties of undefined (reading 'clientWidth')`). Fixed by changing to `scroll_to: 'start'` and implementing manual scroll-to-today logic using `gantt_start`, `config.step`, and `config.column_width`.
+- **Double initialization race condition** — the dynamic `import('frappe-gantt')` could resolve twice before the ref was set, constructing two Gantt instances and crashing. Fixed with a `cancelled` flag and a `ganttRef.current` guard inside the `.then()` callback.
+- **Anchor task bar appearing in chart** — SVG `<g>` elements ignore `display: none` in CSS. Fixed by switching the hide rule to `visibility: hidden`, which SVG respects and which cascades correctly to child elements.
+- **Tooltip showing end date one day too late** — Frappe Gantt stores `_end` as an exclusive date (one day past the visual end). Fixed by using the raw string field `t.end` (YYYY-MM-DD) instead of the `t._end` Date object, then reformatting to MM/DD/YYYY in the popup.
+- **Month view bar misalignment** — a confirmed bug inside Frappe Gantt v1.2.2 where Month view bar positions use equal-month math but column headers use variable-day-width math, causing all bars to render in the wrong columns. Fixed by removing Month view entirely and replacing it with custom Day/Week toggle buttons.
+- **Arrow hit areas producing zero elements** — `setupArrowHitAreas` was querying `.gantt .arrow`, which selects the `<g class="arrow">` container, not the individual `<path>` children. Fixed by changing the selector to `.gantt .arrow path:not(.arrow-hit)`.
+- **Arrow hit areas double-cloning on re-render** — on subsequent calls (after view mode change or `refresh()`), the selector was also picking up existing `.arrow-hit` paths and cloning them again. Fixed by adding `:not(.arrow-hit)` to exclude already-processed paths.
+- **Arrow highlighting not visually applying** — `arrow-highlighted` was being added as a CSS class to SVG `<path>` elements, but the CSS rule could not reliably target SVG path children through the Tailwind v4 processing pipeline. Fixed by switching to JavaScript inline style assignment (`a.style.stroke`, `a.style.strokeWidth`) which bypasses all CSS cascade and specificity concerns.
+- **Setup functions not running after refresh** — `ganttRef.current.refresh()` wipes the SVG DOM, destroying all arrow elements and event listeners. Fixed by calling `setupArrowHitAreas` and `setupChainHighlight` inside a 60ms `setTimeout` after every `refresh()` and every `on_view_change`.
+
+### Decisions Made
+
+- **Invisible anchor task instead of a library config option** — Frappe Gantt has no option to set an explicit canvas end date; it only extends the canvas based on task end dates. The `__today_anchor__` invisible task (hidden via CSS `visibility: hidden`) is the only reliable workaround. The block in `lib/utils/gantt.ts` is annotated with "Do not remove" to prevent future confusion.
+- **Removed Month view** — the misalignment is a confirmed library bug that cannot be fixed without patching Frappe Gantt's source. Month view was removed rather than shipping broken UI. Day and Week views both render correctly.
+- **Custom Day/Week toggle buttons** — built to match the existing design system (navy active, outlined inactive) rather than using Frappe Gantt's built-in view mode selector, which does not support the app's visual style.
+- **JS inline styles for arrow highlighting** — CSS class toggling on SVG `<path>` elements was unreliable through the Tailwind v4/Next.js CSS pipeline. Inline styles via `element.style.stroke` are the highest-priority value in the CSS cascade and are unaffected by any build-time CSS processing.
+- **Union-find for chain grouping** — the `buildChainMap` function uses a union-find (disjoint set) data structure to group all transitively connected tasks into a single chain. Hovering any task in a linear chain correctly highlights all arrows in that chain simultaneously.
+
+---
+
 ## [April 21 2026] — Issue #6 Complete
 
 ### Issue #6 — Dependency Logic
