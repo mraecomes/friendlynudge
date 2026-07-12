@@ -1,12 +1,14 @@
-# ARCHITECTURE.md — PM Tool
+# ARCHITECTURE.md — FriendlyNudge
 
-> This document describes how PM Tool is structured technically — how the parts connect, how data flows, and why key decisions were made. Read this alongside CLAUDE.md before making any structural changes to the codebase.
+> This document describes how FriendlyNudge is structured technically — how the parts connect, how data flows, and why key decisions were made. Read this alongside CLAUDE.md before making any structural changes to the codebase.
+
+> **Note on project name:** FriendlyNudge was originally scaffolded under the folder name `pm-tool`. The local folder and `package.json` name remain `pm-tool` — this is intentional and carries no functional significance. Any references to `pm-tool` in the codebase, file paths, or package identifiers are correct and expected.
 
 ---
 
 ## High-Level Overview
 
-PM Tool is a full-stack web application built with Next.js. The frontend and backend live in the same project (monorepo). Supabase handles the database, authentication, and file storage. Vercel handles deployment.
+FriendlyNudge is a full-stack web application built with Next.js. The frontend and backend live in the same project (monorepo). Supabase handles the database, authentication, and file storage. Vercel handles deployment.
 
 ```
 Browser (User)
@@ -122,7 +124,7 @@ Log notification in notification_history table
 
 ## Dependency Logic Architecture
 
-Dependency recalculation is one of the most complex pieces of business logic in PM Tool. It lives in `lib/dependencies/`.
+Dependency recalculation is one of the most complex pieces of business logic in FriendlyNudge. It lives in `lib/dependencies/`.
 
 The dependency graph is a Directed Acyclic Graph (DAG) — tasks are nodes, dependencies are directed edges. When any task changes, the system:
 

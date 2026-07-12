@@ -1,4 +1,4 @@
-# PRD — PM Tool
+# PRD — FriendlyNudge
 
 > Product Requirements Document — Version 1.0 — April 2026
 > This is the working source of truth for all product requirements. Update this file as requirements change. Always refer to this document before building any new feature.
@@ -7,9 +7,9 @@
 
 ## 1. Product Vision
 
-PM Tool is a web-based project management platform built for project managers and cross-functional teams who need more than a simple to-do list. It combines dependency-aware Gantt timelines, automated deadline notifications, and team collaboration — all in one place.
+FriendlyNudge is a web-based project management platform built for project managers and cross-functional teams who need more than a simple to-do list. It combines dependency-aware Gantt timelines, automated deadline notifications, and team collaboration — all in one place.
 
-**The core problem we are solving:** project managers spend too much time manually following up with task owners. Deadlines slip not because people are lazy, but because no system is proactively reminding them. PM Tool puts accountability on autopilot so project managers can focus on strategy, not status updates.
+**The core problem we are solving:** project managers spend too much time manually following up with task owners. Deadlines slip not because people are lazy, but because no system is proactively reminding them. FriendlyNudge puts accountability on autopilot so project managers can focus on strategy, not status updates.
 
 The product is inspired by tools like Smartsheet but designed to be significantly easier to adopt — particularly for non-technical teams who need powerful dependency logic and smart notifications without a steep learning curve.
 
@@ -19,7 +19,7 @@ The product is inspired by tools like Smartsheet but designed to be significantl
 
 ### Primary User — The Project Manager
 
-The project manager is the power user of PM Tool. They create and own timelines, define tasks and dependencies, invite collaborators, and rely on the system to keep everyone accountable without constant manual follow-up.
+The project manager is the power user of FriendlyNudge. They create and own timelines, define tasks and dependencies, invite collaborators, and rely on the system to keep everyone accountable without constant manual follow-up.
 
 Their core needs:
 - A clear, visual Gantt timeline that shows how tasks connect and what blocks what
@@ -113,7 +113,7 @@ Creating and editing tasks should feel as natural as editing a spreadsheet. User
 ### 5.3 Dependency Logic
 
 #### User Experience
-Dependencies are the most powerful and most delicate feature of PM Tool. Users need to see immediately how a change cascades — and the system needs to prevent mistakes like circular dependencies before they cause confusion.
+Dependencies are the most powerful and most delicate feature of FriendlyNudge. Users need to see immediately how a change cascades — and the system needs to prevent mistakes like circular dependencies before they cause confusion.
 
 #### Functional Requirements
 - Support Finish-to-Start (FS) dependencies in MVP — Task B cannot start until Task A is complete
@@ -132,7 +132,7 @@ Dependencies are the most powerful and most delicate feature of PM Tool. Users n
 ### 5.4 Gantt Chart Visualization
 
 #### User Experience
-The Gantt chart is the emotional centerpiece of PM Tool. It needs to feel fast, responsive, and immediately legible. Users should understand their timeline at a glance — which tasks are on track, which are blocked, and how everything connects.
+The Gantt chart is the emotional centerpiece of FriendlyNudge. It needs to feel fast, responsive, and immediately legible. Users should understand their timeline at a glance — which tasks are on track, which are blocked, and how everything connects.
 
 #### Functional Requirements
 - Horizontal bar chart with one row per task, proportional to duration
@@ -158,12 +158,12 @@ The Gantt chart is the emotional centerpiece of PM Tool. It needs to feel fast, 
 
 ## 6. v1 — Multi-Timeline & Automated Notifications
 
-**v1 Goal:** Extend PM Tool to support multiple projects per user, provide a unified dashboard view, and introduce the automated notification system that removes the need for manual PM follow-up.
+**v1 Goal:** Extend FriendlyNudge to support multiple projects per user, provide a unified dashboard view, and introduce the automated notification system that removes the need for manual PM follow-up.
 
 ### 6.1 Automated Notifications — The Core v1 Feature
 
 #### User Experience
-This is the feature that transforms PM Tool from a timeline viewer into a proactive accountability system. Task owners should receive clear, actionable emails that tell them exactly what is expected of them and when — without needing to log in to check.
+This is the feature that transforms FriendlyNudge from a timeline viewer into a proactive accountability system. Task owners should receive clear, actionable emails that tell them exactly what is expected of them and when — without needing to log in to check.
 
 #### Notification Types
 - Task due today — sent at 8:00 AM on the due date to the assigned task owner
@@ -307,7 +307,7 @@ Users can filter the task list by status, date range, assignee, or custom tags. 
 - Users managing 3+ projects find the dashboard gives them a clear project health summary without clicking into each timeline
 
 ### Long-Term Success
-- Project managers report spending less time on status follow-up after adopting PM Tool
+- Project managers report spending less time on status follow-up after adopting FriendlyNudge
 - Task owners report feeling more informed about their responsibilities without needing to be prompted by the PM
 
 ---

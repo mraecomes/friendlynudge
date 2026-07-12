@@ -1,15 +1,15 @@
-# CLAUDE.md — PM Tool
+# CLAUDE.md — FriendlyNudge
 
-> This file gives Claude Code persistent context about the PM Tool project.
+> This file gives Claude Code persistent context about the FriendlyNudge project.
 > Read this file at the start of every session before making any changes.
 
 ---
 
 ## What We Are Building
 
-PM Tool is a web-based project management platform for project managers and cross-functional teams. It combines dependency-aware Gantt timelines, automated deadline notifications, and team collaboration in one place.
+FriendlyNudge is a web-based project management platform for project managers and cross-functional teams. It combines dependency-aware Gantt timelines, automated deadline notifications, and team collaboration in one place.
 
-The core problem we are solving: project managers spend too much time manually following up with task owners. PM Tool puts accountability on autopilot — the system sends reminders automatically so the PM can focus on strategy, not status updates.
+The core problem we are solving: project managers spend too much time manually following up with task owners. FriendlyNudge puts accountability on autopilot — the system sends reminders automatically so the PM can focus on strategy, not status updates.
 
 Full product details are in the PRD document. Always refer to the PRD for feature requirements before building anything.
 
@@ -285,7 +285,7 @@ pnpm lint
 
 ## Design Direction
 
-PM Tool should feel like a professional-grade tool that a project manager at a serious company would be proud to use. The visual tone is clean, corporate, and trustworthy — inspired by tools like Linear, Notion, and Asana.
+FriendlyNudge should feel like a professional-grade tool that a project manager at a serious company would be proud to use. The visual tone is clean, corporate, and trustworthy — inspired by tools like Linear, Notion, and Asana.
 
 ### Visual Style
 - Clean, uncluttered layouts with generous whitespace
