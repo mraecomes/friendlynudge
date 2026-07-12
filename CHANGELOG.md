@@ -1,4 +1,4 @@
-# CHANGELOG.md — PM Tool
+# CHANGELOG.md — FriendlyNudge
 
 > A running log of what was built, changed, or fixed in each coding session.
 > Update this at the end of every session before closing Cursor.
@@ -26,6 +26,15 @@
 
 ---
 
+## [July 11, 2026] — Product Rename
+
+### Decisions Made
+
+- Product renamed from **PM Tool** to **FriendlyNudge** across all project documentation (PRD.md, ARCHITECTURE.md, CLAUDE.md, STATUS.md, CHANGELOG.md, END_OF_SESSION_CHECKLIST.md). The GitHub repository has been renamed to `friendlynudge` to match.
+- The local folder name (`pm-tool`) and `package.json` name remain `pm-tool` intentionally. These are cosmetic identifiers with no functional dependency on the product name — renaming them would require unnecessary file system changes with no benefit to the running application.
+
+---
+
 ## [April 25, 2026] — Issue #7 Complete
 
 ### Issue #7 — Gantt Chart Visualization
@@ -40,7 +49,7 @@
 - Day / Week view toggle — custom button pair (navy active state, outlined inactive) replacing Frappe Gantt's built-in view mode selector
 - Dependency arrow chain highlighting — hovering any task bar or arrow highlights all arrows in that task's connected dependency chain in navy; all other arrows stay gray
 - Transparent wide hit paths cloned over each arrow for a larger hover target area (12px stroke vs 1.5px visible)
-- Invisible `__today_anchor__` task injected into the Gantt data to force the SVG canvas to extend through today + 28 days, even when all real tasks end before today
+- Invisible `__today_anchor_`_ task injected into the Gantt data to force the SVG canvas to extend through today + 28 days, even when all real tasks end before today
 - `lib/utils/gantt.ts` — utility that converts `Task[]` + `Dependency[]` into the Frappe Gantt task format with status colors, dependency wiring, and the today anchor
 - `components/gantt/GanttLegend` — color-coded legend below the chart showing all four task statuses
 - `types/frappe-gantt.d.ts` — TypeScript module declaration for the Frappe Gantt library, including `gantt_start`, `gantt_end`, `config`, `infinite_padding`, and `on_view_change`

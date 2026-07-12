@@ -1,4 +1,4 @@
-# STATUS.md — PM Tool
+# STATUS.md — FriendlyNudge
 
 > This is the first file to read at the start of every coding session.
 > It tells you exactly where the project stands right now.
@@ -8,10 +8,10 @@
 
 ## Current Status
 
-**Build Phase:** MVP — Complete
-**Last Updated:** April 25, 2026
-**Last Session:** Issue #7 — Gantt chart visualization (Frappe Gantt, status colors, today line, dependency arrow highlighting)
-**Next Session Goal:** MVP review — confirm all features are working end-to-end, then plan v1
+**Build Phase:** MVP Complete — Active: Vercel Deployment
+**Last Updated:** July 11, 2026
+**Last Session:** Product renamed to FriendlyNudge; deployment checklist prepared
+**Next Session Goal:** Deploy to Vercel and verify the app end-to-end in production
 
 ---
 
@@ -43,6 +43,23 @@
 
 ---
 
+## Deployment Checklist
+
+These are steps to complete before and during the Vercel deployment.
+
+- [ ] Rename GitHub repo to `friendlynudge` (do before connecting Vercel)
+- [ ] Choose Vercel project name
+- [ ] Set all environment variables in Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+- [ ] Confirm email confirmation is OFF in Supabase for production (decision: off, to keep signup friction-free; turning it on is a documented pre-launch item)
+- [ ] Add the production Vercel URL to Supabase Authentication → URL Configuration so password reset links resolve correctly in production
+- [ ] Deploy to Vercel and confirm the build succeeds
+- [ ] Cold end-to-end test in an incognito window: sign up as a new user, create a timeline, add tasks, create a Finish-to-Start dependency, change a predecessor's date or duration, confirm downstream tasks recalculate
+- [ ] Attempt to create a circular dependency and confirm it is blocked with a clear error
+- [ ] Confirm the Day and Week view toggle both render correctly in production
+- [ ] Confirm the password reset flow works end to end in production
+
+---
+
 ## v1 Progress (Do Not Start Until MVP Is Complete)
 
 
@@ -68,11 +85,7 @@ None — ready to start building.
 
 ## Open Questions
 
-- Confirm Supabase project URL and keys are accessible before first session
-- Decide on a Vercel project name before first deploy
 - Create a Resend account before starting v1 notifications
-- Turn email confirmation back ON in Supabase before launch
-- Decide on final product/brand name for the app (separate from the Vercel project name)
 - Move delete account CTA to a Settings page (flagged during Issue #3 UAT)
 
 ---
@@ -121,5 +134,5 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ---
 
-*Last updated: April 25, 2026*
+*Last updated: July 11, 2026*
 *Product owner: Mallory Comes*

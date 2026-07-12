@@ -1,4 +1,4 @@
-# End of Session Checklist — PM Tool
+# End of Session Checklist — FriendlyNudge
 
 > Run through these 5 steps at the end of every coding session to keep
 > STATUS.md and CHANGELOG.md up to date everywhere.
@@ -120,4 +120,4 @@ Claude Code will never read an outdated file!
 ---
 
 *Last updated: April 2026*
-*PM Tool — Mallory Comes*
+*FriendlyNudge — Mallory Comes*
