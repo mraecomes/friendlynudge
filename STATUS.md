@@ -8,10 +8,10 @@
 
 ## Current Status
 
-**Build Phase:** MVP Complete — Active: Vercel Deployment
-**Last Updated:** July 11, 2026
-**Last Session:** Product renamed to FriendlyNudge; deployment checklist prepared
-**Next Session Goal:** Deploy to Vercel and verify the app end-to-end in production
+**Build Phase:** MVP Complete — Deployed to Production
+**Last Updated:** July 12, 2026
+**Last Session:** Deployed to Vercel; resolved production bugs (malformed env variable, stale branding, PKCE password reset)
+**Next Session Goal:** Begin v1 — [decide focus area and create GitHub issue before starting]
 
 ---
 
@@ -47,16 +47,16 @@
 
 These are steps to complete before and during the Vercel deployment.
 
-- [ ] Rename GitHub repo to `friendlynudge` (do before connecting Vercel)
-- [ ] Choose Vercel project name
-- [ ] Set all environment variables in Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] Confirm email confirmation is OFF in Supabase for production (decision: off, to keep signup friction-free; turning it on is a documented pre-launch item)
-- [ ] Add the production Vercel URL to Supabase Authentication → URL Configuration so password reset links resolve correctly in production
-- [ ] Deploy to Vercel and confirm the build succeeds
-- [ ] Cold end-to-end test in an incognito window: sign up as a new user, create a timeline, add tasks, create a Finish-to-Start dependency, change a predecessor's date or duration, confirm downstream tasks recalculate
-- [ ] Attempt to create a circular dependency and confirm it is blocked with a clear error
-- [ ] Confirm the Day and Week view toggle both render correctly in production
-- [ ] Confirm the password reset flow works end to end in production
+- [x] Rename GitHub repo to `friendlynudge` (do before connecting Vercel)
+- [x] Choose Vercel project name
+- [x] Set all environment variables in Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+- [x] Confirm email confirmation is OFF in Supabase for production (decision: off, to keep signup friction-free; turning it on is a documented pre-launch item)
+- [x] Add the production Vercel URL to Supabase Authentication → URL Configuration so password reset links resolve correctly in production
+- [x] Deploy to Vercel and confirm the build succeeds
+- [x] Cold end-to-end test in an incognito window: sign up as a new user, create a timeline, add tasks, create a Finish-to-Start dependency, change a predecessor's date or duration, confirm downstream tasks recalculate
+- [x] Attempt to create a circular dependency and confirm it is blocked with a clear error
+- [x] Confirm the Day and Week view toggle both render correctly in production
+- [x] Confirm the password reset flow works end to end in production
 
 ---
 
@@ -114,6 +114,9 @@ These decisions need to be made before the relevant feature is built. They do no
 - ✅ Issue #5 — Task CRUD (create, inline edit, delete, drag-to-reorder)
 - ✅ Issue #6 — Dependency logic (Finish-to-Start, cascading recalculation, circular detection)
 - ✅ Issue #7 — Gantt chart visualization (Frappe Gantt, status colors, today line, dependency arrow highlighting)
+- ✅ Issue #23 — Branding: update user-facing product name to FriendlyNudge
+- ✅ Issue #25 — Fix: password reset PKCE code double-consumption via /auth/callback
+- ✅ Deployed to Vercel — production verified end-to-end (7.12.26)
 
 ---
 
@@ -134,5 +137,5 @@ These decisions need to be made before the relevant feature is built. They do no
 
 ---
 
-*Last updated: July 11, 2026*
+*Last updated: July 12, 2026*
 *Product owner: Mallory Comes*

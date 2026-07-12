@@ -26,6 +26,21 @@
 
 ---
 
+## [July 12, 2026] — Deployment to Vercel
+
+### Fixed
+
+- **Malformed `NEXT_PUBLIC_SUPABASE_URL` environment variable in Vercel** — the value had `/rest/v1` incorrectly appended to the project URL, causing all Supabase auth requests to return a 404 on the token endpoint in production. Found by inspecting Supabase Auth logs, fixed by correcting the variable to the bare project URL and redeploying.
+- **Stale "PM Tool" branding in three user-facing locations** — the browser tab title, auth page header (`<h1>`), and dashboard nav header still displayed "PM Tool" despite the earlier documentation-only rename. Found during production UAT. Fixed via Issue #23.
+- **Password reset failing on first click due to PKCE code double-consumption** — `forgot-password/page.tsx` set its `redirectTo` directly to `/update-password`, so the middleware's `createServerClient` consumed the single-use PKCE code on the incoming request before the page could exchange it. The page then called `exchangeCodeForSession` on an already-used code and surfaced a false "link expired" error even though the session had been established successfully. Fixed by routing `redirectTo` through `/auth/callback?next=/update-password` instead; the callback exchanges the code intentionally, sets session cookies, and redirects cleanly. Fixed via Issue #25.
+
+### Decisions Made
+
+- Diagnosed the password reset bug using Supabase Auth logs rather than guessing — the logs showed `/verify` returning 303 and `/token` returning 200, confirming the PKCE code was being consumed successfully by the middleware before the page ran, not expiring in transit.
+- Verified the fix on the production deployment rather than the PR's Vercel preview URL, since preview URLs are not in the Supabase redirect allowlist and would not have exercised the actual redirect flow end-to-end.
+
+---
+
 ## [July 11, 2026] — Product Rename
 
 ### Decisions Made
