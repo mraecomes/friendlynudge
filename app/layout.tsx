@@ -10,7 +10,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'PM Tool',
+  title: 'FriendlyNudge',
   description: 'Dependency-aware Gantt timelines with automated deadline notifications.',
 }
 
