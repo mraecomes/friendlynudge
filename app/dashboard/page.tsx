@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <header className="bg-[#1E3A5F] text-white px-6 py-4 flex items-center justify-between">
-        <span className="text-lg font-semibold">PM Tool</span>
+        <span className="text-lg font-semibold">FriendlyNudge</span>
         <div className="flex items-center gap-4">
           <span className="text-sm text-blue-200">{user.email}</span>
           <LogoutButton />
